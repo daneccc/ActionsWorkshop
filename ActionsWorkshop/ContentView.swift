@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//  ActionsWorkshop
-//
-//  Created by Daniele Cavalcante on 09/08/23.
-//
 
 import SwiftUI
 
