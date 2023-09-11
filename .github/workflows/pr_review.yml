@@ -1,0 +1,29 @@
+name: ApprovePRs
+on:
+  pull_request:
+      types:
+      - opened
+      - synchronize
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Verify if a PR is approved
+      uses: actions/github-script@v5
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        script: |
+          const reviews = await github.pulls.listReviews({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            pull_number: context.payload.pull_request.number,
+          });
+          const approvals = reviews.data.filter(review => review.state === 'APPROVED');
+          if (approvals.length < 1) {
+            core.setFailed('Este PR requer pelo menos uma aprovação.');
+          }
+    - name: Label approved pull requests
+      # You may pin to the exact commit or the version.
+      # uses: abinoda/label-when-approved-action@d8e895923241c6399899471c5eb91fc3cc717776
+      uses: abinoda/label-when-approved-action@1.0.5
